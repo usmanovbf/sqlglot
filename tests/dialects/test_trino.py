@@ -4,6 +4,11 @@ from tests.dialects.test_dialect import Validator
 class TestTrino(Validator):
     dialect = "trino"
 
+    def test_select(self):
+        self.validate_identity(
+            """EXECUTE IMMEDIATE 'INSERT INTO a (b, c, d) VALUES (?, ?, ?)' USING DATE '2024-08-23', TIMESTAMP '2024-08-23 09:28:42.000000 UTC', DOUBLE '0.0', 'test'"""
+        )
+
     def test_trim(self):
         self.validate_identity("SELECT TRIM('!' FROM '!foo!')")
         self.validate_identity("SELECT TRIM(BOTH '$' FROM '$var$')")

@@ -1027,6 +1027,12 @@ class DerivedTable(Expression):
         return [select.output_name for select in self.selects]
 
 
+class ExecuteImmediate(Expression):
+    arg_types = {
+        "this": False,
+        "expression": True,
+    }
+
 class Query(Expression):
     def subquery(self, alias: t.Optional[ExpOrStr] = None, copy: bool = True) -> Subquery:
         """

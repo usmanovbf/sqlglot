@@ -250,6 +250,7 @@ class TokenType(AutoName):
     DISTRIBUTE_BY = auto()
     DIV = auto()
     DROP = auto()
+    # EXECUTE = auto()
     ELSE = auto()
     END = auto()
     ESCAPE = auto()

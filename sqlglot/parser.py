@@ -777,6 +777,7 @@ class Parser(metaclass=_Parser):
         TokenType.DESC: lambda self: self._parse_describe(),
         TokenType.DESCRIBE: lambda self: self._parse_describe(),
         TokenType.DROP: lambda self: self._parse_drop(),
+        TokenType.EXECUTE: lambda self: self._parse_execute(),
         TokenType.INSERT: lambda self: self._parse_insert(),
         TokenType.KILL: lambda self: self._parse_kill(),
         TokenType.LOAD: lambda self: self._parse_load(),
@@ -1731,6 +1732,25 @@ class Parser(metaclass=_Parser):
             purge=self._match_text_seq("PURGE"),
             cluster=cluster,
             concurrently=concurrently,
+        )
+
+    def _parse_execute(self) -> exp.ExecuteImmediate | exp.Command:
+        self._match("IMMEDIATE")
+        self._match("'")
+
+        select = self._parse_select()
+
+        self._match("'")
+
+        using = []
+        if self._match_text_seq("USING"):
+            self._match_l_paren()
+            k = self._parse_using_identifiers()
+
+        return self.expression(
+            exp.ExecuteImmediate,
+            this=using,
+            expression=select,
         )
 
     def _parse_exists(self, not_: bool = False) -> t.Optional[bool]:
